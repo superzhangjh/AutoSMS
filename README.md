@@ -1,7 +1,7 @@
 # 关于流程
 (1) SmsAccessibilityService(ABS) 接收通知时，做保活操作拉起 SmsNotificationListenerService(NLS)
-\n(2) NLS 接收通知时 (onNotificationPosted) 使用正则匹配出4/6位验证码，然后将验证码及通知key发送给 ABS
-\n(3) ABS 使用无障碍操作填充验证码，成功后将通知 Key 发送给 NLS，NLS清空 Key 对应的验证码通知
+<br>(2) NLS 接收通知时 (onNotificationPosted) 使用正则匹配出4/6位验证码，然后将验证码及通知key发送给 ABS
+(3) ABS 使用无障碍操作填充验证码，成功后将通知 Key 发送给 NLS，NLS清空 Key 对应的验证码通知
 
 # 关于填充服务
 (1) 使用节点拦截器模式逐步处理验证码，成功后消费验证码，不再向下传递
