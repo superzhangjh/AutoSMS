@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">验证码助手</string>
+    <string name="access_desc">验证码自动填充</string>
+</resources>

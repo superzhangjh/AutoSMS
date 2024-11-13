@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:text="1"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv2"
+            android:text="2"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv3"
+            android:text="3"
+            style="@style/StyleKeyItem"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv4"
+            android:text="4"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv5"
+            android:text="5"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv6"
+            android:text="6"
+            style="@style/StyleKeyItem"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv7"
+            android:text="7"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv8"
+            android:text="8"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv9"
+            android:text="9"
+            style="@style/StyleKeyItem"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_paste"
+            android:text="粘贴"
+            android:textSize="14sp"
+            style="@style/StyleKeyItem"/>
+
+        <TextView
+            android:id="@+id/tv0"
+            android:text="0"
+            style="@style/StyleKeyItem"/>
+
+        <ImageView
+            android:padding="7dp"
+            app:tint="#666"
+            android:src="@drawable/icon_remove"
+            android:id="@+id/tv_remove"
+            style="@style/StyleKeyItem"/>
+    </LinearLayout>
+
+</LinearLayout>
