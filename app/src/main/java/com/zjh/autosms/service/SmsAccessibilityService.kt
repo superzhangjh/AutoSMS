@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
 import com.zjh.autosms.entity.LocalSetting
 import com.zjh.autosms.event.BusEvent
 import com.zjh.autosms.service.node.FocusedNodeInterceptor
@@ -88,9 +87,7 @@ class SmsAccessibilityService : AccessibilityService() {
             }
             //结束输入时切换为默认的输入法
             BusEvent.SERVICE_FINISH_INPUT -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    resetInputMethod()
-                }
+                resetInputMethod()
             }
         }
     }
@@ -135,15 +132,24 @@ class SmsAccessibilityService : AccessibilityService() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
     private fun resetInputMethod() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        for (inputMethodInfo in imm.enabledInputMethodList) {
-            //记录默认id，填充完需要复原回去
-            if (inputMethodInfo.isDefaultResourceId > 0) {
-                val success = softKeyboardController.switchToInputMethod(inputMethodInfo.id)
-                Log.d(TAG, "切换输入法：${inputMethodInfo.component.className} success:$success")
-                break
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            for (inputMethodInfo in imm.enabledInputMethodList) {
+                Log.d(TAG, "resetInputMethod 查找到输入法：${inputMethodInfo.component.className} default：${inputMethodInfo.isDefaultResourceId}")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    //适配安卓13，安卓13切换填充输入法后会无法自动切回原来的输入法，所以这里将其禁用，让系统读取默认的输入法
+                    if (inputMethodInfo.component.className == KeyboardInputInterceptor.serviceName) {
+                        val enable = softKeyboardController.setInputMethodEnabled(inputMethodInfo.id, false)
+                        Log.d(TAG, "resetInputMethod 切换输入法：${inputMethodInfo.component.className} enable:$enable")
+                    }
+                } else if (inputMethodInfo.isDefaultResourceId > 0) {
+                    val success = softKeyboardController.switchToInputMethod(inputMethodInfo.id)
+                    Log.d(TAG, "resetInputMethod 切换输入法：${inputMethodInfo.component.className} success:$success")
+                    if (success) {
+                        break
+                    }
+                }
             }
         }
     }

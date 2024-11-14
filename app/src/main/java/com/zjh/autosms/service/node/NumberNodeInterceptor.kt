@@ -24,13 +24,13 @@ class NumberNodeInterceptor(private val service: AccessibilityService) : NodeInt
                 return true
             }
             //输入框的个数与验证码相同时，逐个填充数字(哈啰APP的登录界面)
-            code.length -> {
-                acceptNodes.forEachIndexed { index, accessibilityNodeInfo ->
-                    accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
-                    fillCode(code.substring(index, index + 1), accessibilityNodeInfo)
-                }
-                return true
-            }
+//            code.length -> {
+//                acceptNodes.forEachIndexed { index, accessibilityNodeInfo ->
+//                    accessibilityNodeInfo.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
+//                    fillCode(code.substring(index, index + 1), accessibilityNodeInfo)
+//                }
+//                return true
+//            }
 //            //每个都填充完整验证码
 //            else -> {
 //                acceptNodes.forEach {
@@ -61,16 +61,11 @@ class NumberNodeInterceptor(private val service: AccessibilityService) : NodeInt
             // 2. Check if the inputType indicates numeric input
 
             val inputType = nodeInfo.inputType
-            if (isNumericInputType(inputType)) {
+            if (isNumericInputType(inputType) && nodeInfo.isEditable) {
                 // This is a numeric input field
                 Log.d("NumberNodeInterceptor", "addNode: ${nodeInfo.text} className:$className ")
                 acceptNodes.add(nodeInfo)
             }
-        }
-
-        if (nodeInfo.isEditable) {
-            acceptNodes.add(nodeInfo)
-            Log.d("NumberNodeInterceptor", "addEditable: ${nodeInfo.text} className:$className ")
         }
 
         // 3. Recursively check child nodes

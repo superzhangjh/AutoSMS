@@ -10,6 +10,7 @@ import android.util.Log
 import com.zjh.autosms.utils.OSUtils
 import com.zjh.autosms.utils.VerificationCodeUtils
 
+
 class SmsNotificationListenerService : NotificationListenerService() {
     companion object {
         private val TAG = SmsNotificationListenerService::class.java.simpleName
@@ -42,8 +43,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
     }
 
     private fun sendCodeToABS(sbn: StatusBarNotification) {
-        val notificationText = sbn.notification.extras.get(Notification.EXTRA_TEXT).toString()
-        Log.d(TAG, "短信通知: $notificationText")
+        val notificationText = sbn.notification.extras.get(Notification.EXTRA_TEXT)?.toString() ?: return
         VerificationCodeUtils.matchVerificationCode(notificationText)?.let {
             //将识别到的验证码发送给无障碍服务处理
             val intent = Intent().setComponent(ComponentName(packageName, SmsAccessibilityService::class.java.canonicalName!!))

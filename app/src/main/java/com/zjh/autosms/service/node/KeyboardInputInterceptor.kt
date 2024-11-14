@@ -26,37 +26,31 @@ class KeyboardInputInterceptor(private val service: AccessibilityService) : Node
     }
 
     private fun switchInputMethod(code: String): Boolean {
-        //默认输入法的id
-        var defaultInputMethodId: String? = null
-        //是否切换成功
-        var switchServiceSuccess = false
-
         Log.d(TAG, "Service 类名:${serviceName}")
         val imm = service.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         for (inputMethodInfo in imm.enabledInputMethodList) {
             Log.d(TAG, "读取到输入法:${inputMethodInfo.component.className} id:${inputMethodInfo.id} isDefaultResourceId:${inputMethodInfo.isDefaultResourceId}")
-            //记录默认id，填充完需要复原回去
-            if (inputMethodInfo.isDefaultResourceId > 0) {
-                defaultInputMethodId = inputMethodInfo.id
-            }
             if (serviceName == inputMethodInfo.component.className) {
                 // 切换到我们自己的输入法
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    switchServiceSuccess = service.softKeyboardController.switchToInputMethod(inputMethodInfo.id)
-                    Log.d(TAG, "切换输入法：${inputMethodInfo.component.className} success:$switchServiceSuccess")
-
                     //将验证码写入SP等待输入法调用
                     SPUtils.getInstance().putString(SPUtils.KEY_AUTO_FILL_CODE, code)
-//                    EventBus.getDefault().post(BusEvent(BusEvent.PARSE_CODE, code))
-                }
-            }
 
-            if (switchServiceSuccess && defaultInputMethodId != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    //切换到默认的输入法
-//                    service.softKeyboardController.switchToInputMethod(defaultInputMethodId)
+                    //适配安卓13，在填充完毕后会将填充输入法禁用。所以在填充前将输入法启用
+                    var enable = 0
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        enable = service.softKeyboardController.setInputMethodEnabled(inputMethodInfo.id, true)
+                    }
+                    //切换输入法
+                    val success = service.softKeyboardController.switchToInputMethod(inputMethodInfo.id)
+                    Log.d(TAG, "切换输入法：${inputMethodInfo.component.className} success:$success enable:$enable")
+                    if (success) {
+                        return true
+                    } else {
+                        //失败时清空验证码
+                        SPUtils.getInstance().putString(SPUtils.KEY_AUTO_FILL_CODE, "")
+                    }
                 }
-                return true
             }
         }
         return false
